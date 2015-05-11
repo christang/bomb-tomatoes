@@ -1,0 +1,51 @@
+import re
+
+
+class Movies(object):
+
+    def __init__(self, movies):
+        self.movies = movies
+        self.movies_by_ID = {v.ID: k for k, v in enumerate(self.movies)}
+
+    def __getitem__(self, item):
+        try:
+            movie_index = self.movies_by_ID[item]
+            if self.movies[movie_index].ID == item:
+                return self.movies[movie_index]
+            else:
+                raise
+        except:
+            raise Exception('unexpected movie index %d' % item)
+
+    @staticmethod
+    def parse_stream(stream):
+        movies = [Movie.parse_entry(line) for line in stream]
+        return Movies(movies)
+
+
+class Movie(object):
+
+    def __init__(self, id_, title, year, tags):
+        self.ID = id_
+        self.title = title
+        self.year = year
+        self.tags = tags
+
+    @staticmethod
+    def parse_entry(line):
+        items = line.split('::')
+        index = int(items[0])
+        title, year = Movie.parse_title_year(items[1])
+        tags = items[2].split('|')
+        return Movie(index, title, year, tags)
+
+    @staticmethod
+    def parse_title_year(item):
+        match = re.match(r'^(.*)\((\d{4})\)$', item)
+        if match:
+            return match.group(1).strip(), int(match.group(2))
+        else:
+            raise Exception("couldn't parse " + item)
+
+    def __repr__(self):
+        return '::'.join([str(self.ID), self.title, str(self.year), '|'.join(self.tags)])
