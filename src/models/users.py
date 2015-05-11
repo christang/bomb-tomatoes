@@ -55,7 +55,7 @@ class User(object):
 
     @staticmethod
     def parse_entry(line):
-        items = line.split('::')
+        items = line.strip().split('::')
         return User(int(items[0]), items[1] == 'M', int(items[2]), int(items[3]), items[4])
 
     def __repr__(self):

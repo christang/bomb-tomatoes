@@ -27,7 +27,7 @@ class Rating(object):
 
     @staticmethod
     def parse_entry(line):
-        items = line.split('::')
+        items = line.strip().split('::')
         return Rating(int(items[0]), int(items[1]), int(items[2]), items[3])
 
     def __repr__(self):

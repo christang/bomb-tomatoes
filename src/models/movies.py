@@ -33,7 +33,7 @@ class Movie(object):
 
     @staticmethod
     def parse_entry(line):
-        items = line.split('::')
+        items = line.strip().split('::')
         index = int(items[0])
         title, year = Movie.parse_title_year(items[1])
         tags = items[2].split('|')
