@@ -6,6 +6,7 @@ class Movies(object):
     def __init__(self, movies):
         self.movies = movies
         self.movies_by_ID = {v.ID: k for k, v in enumerate(self.movies)}
+        self.features = reduce(lambda s, t: s | set(t), [m.tags for m in self.movies], set())
 
     def __getitem__(self, item):
         try:
