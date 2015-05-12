@@ -8,7 +8,7 @@ from models.ratings import Ratings
 from models.users import Users
 
 
-class SummaryStatistics(object):
+class Workspace(object):
 
     def __init__(self, movies, ratings, users):
         self.movies = movies
@@ -23,7 +23,7 @@ class SummaryStatistics(object):
 
         for m in self.movies.movies:
             movie_ratings = self.ratings.for_movie(m.ID)
-            summary[m.ID] = SummaryStatistics.summary_stats(movie_ratings)
+            summary[m.ID] = Workspace.summary_stats(movie_ratings)
 
         return summary
 
@@ -32,7 +32,7 @@ class SummaryStatistics(object):
 
         for u in self.users.users:
             movie_ratings = self.ratings.for_user(u.ID)
-            summary[u.ID] = SummaryStatistics.summary_stats(movie_ratings)
+            summary[u.ID] = Workspace.summary_stats(movie_ratings)
 
         return summary
 
@@ -60,7 +60,7 @@ def get_workspace(data_dir):
         ratings = Ratings.parse_stream(open(os.path.join(cwd, 'ratings.dat')))
         users = Users.parse_stream(open(os.path.join(cwd, 'users.dat')))
 
-        stats = SummaryStatistics(movies, ratings, users)
+        stats = Workspace(movies, ratings, users)
         pickle.dump(stats, open(pickle_fn, 'wb'))
     else:
         stats = pickle.load(open(pickle_fn))
