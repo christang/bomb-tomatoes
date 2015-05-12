@@ -32,12 +32,14 @@ class Movie(object):
         self.year = year
         self.tags = tags
 
+        self.r_ids = None
         self.count = None
         self.amean = None
         self.hmean = None
         self.var = None
 
-    def summarize(self, ratings, count, amean, hmean, var):
+    def summarize(self, r_ids, count, amean, hmean, var):
+        self.r_ids = r_ids
         self.count = count
         self.amean = amean
         self.hmean = hmean

@@ -1,7 +1,7 @@
 import cPickle as pickle
 import numpy as np
-import scipy.stats as spstats
 import os
+import scipy.stats as spstats
 
 from models.movies import Movies
 from models.ratings import Ratings
@@ -30,6 +30,7 @@ class Workspace(object):
 
     @staticmethod
     def summary_stats(movie_ratings):
+        r_ids = [r.ID for r in movie_ratings]
         count = len(movie_ratings)
         if count > 0:
             amean = np.mean([r.rating for r in movie_ratings])
@@ -39,7 +40,7 @@ class Workspace(object):
             amean = np.NaN
             hmean = np.NaN
             var = np.NaN
-        return count, amean, hmean, var
+        return r_ids, count, amean, hmean, var
 
 
 def get_workspace(data_dir):
