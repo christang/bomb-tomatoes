@@ -32,6 +32,17 @@ class Movie(object):
         self.year = year
         self.tags = tags
 
+        self.count = None
+        self.amean = None
+        self.hmean = None
+        self.var = None
+
+    def summarize(self, ratings, count, amean, hmean, var):
+        self.count = count
+        self.amean = amean
+        self.hmean = hmean
+        self.var = var
+
     @staticmethod
     def parse_entry(line):
         items = line.strip().split('::')

@@ -15,26 +15,18 @@ class Workspace(object):
         self.ratings = ratings
         self.users = users
 
-        self.movie_stats = self.summary_movies()
-        self.user_stats = self.summary_users()
+        self.summarize_movies()
+        self.summarize_users()
 
-    def summary_movies(self):
-        summary = {}
-
+    def summarize_movies(self):
         for m in self.movies.movies:
             movie_ratings = self.ratings.for_movie(m.ID)
-            summary[m.ID] = Workspace.summary_stats(movie_ratings)
+            self.movies[m.ID].summarize(*Workspace.summary_stats(movie_ratings))
 
-        return summary
-
-    def summary_users(self):
-        summary = {}
-
+    def summarize_users(self):
         for u in self.users.users:
             movie_ratings = self.ratings.for_user(u.ID)
-            summary[u.ID] = Workspace.summary_stats(movie_ratings)
-
-        return summary
+            self.users[u.ID].summarize(*Workspace.summary_stats(movie_ratings))
 
     @staticmethod
     def summary_stats(movie_ratings):
