@@ -10,7 +10,9 @@ from models.users import Users
 
 class Workspace(object):
 
-    def __init__(self, movies, ratings, users):
+    def __init__(self, movies, ratings, users, cwd='dat/pkl'):
+        self.cwd = cwd
+
         self.movies = movies
         self.ratings = ratings
         self.users = users
@@ -29,39 +31,76 @@ class Workspace(object):
         self.summarize_occupations()
 
     def summarize_movies(self):
-        for m in self.movies.movies:
+        def compute():
             movie_ratings = self.ratings.for_movie(m.ID)
-            self.movies[m.ID].summarize(*Workspace.summary_stats(movie_ratings))
+            return Workspace.summary_stats(movie_ratings)
+
+        for m in self.movies.movies:
+            pickle_fn = os.path.join(self.cwd, 'movies', str(m.ID))
+            self.movies[m.ID].summarize(*Workspace.load_or_compute(pickle_fn, compute))
 
     def summarize_users(self):
-        for u in self.users.users:
+        def compute():
             movie_ratings = self.ratings.for_user(u.ID)
-            self.users[u.ID].summarize(*Workspace.summary_stats(movie_ratings))
+            return Workspace.summary_stats(movie_ratings)
+
+        for u in self.users.users:
+            pickle_fn = os.path.join(self.cwd, 'users', str(u.ID))
+            self.users[u.ID].summarize(*Workspace.load_or_compute(pickle_fn, compute))
 
     def summarize_tags(self):
-        for t in self.movies.tags:
+        def compute():
             movie_ratings = self.ratings.for_tag(t, movies=self.movies)
-            self.tags[t] = Workspace.summary_stats(movie_ratings)
+            return Workspace.summary_stats(movie_ratings)
+
+        for t in self.movies.tags:
+            pickle_fn = os.path.join(self.cwd, 'tags', str(t))
+            self.tags[t] = Workspace.load_or_compute(pickle_fn, compute)
 
     def summarize_decades(self):
-        for d in self.movies.decades:
+        def compute():
             movie_ratings = self.ratings.for_decade(d, movies=self.movies)
-            self.decades[d] = Workspace.summary_stats(movie_ratings)
+            return Workspace.summary_stats(movie_ratings)
+
+        for d in self.movies.decades:
+            pickle_fn = os.path.join(self.cwd, 'decades', str(d))
+            self.decades[d] = Workspace.load_or_compute(pickle_fn, compute)
 
     def summarize_age_groups(self):
-        for a in self.users.age_groups:
+        def compute():
             movie_ratings = self.ratings.for_age_group(a, users=self.users)
-            self.age_groups[a] = Workspace.summary_stats(movie_ratings)
+            return Workspace.summary_stats(movie_ratings)
+
+        for a in self.users.age_groups:
+            pickle_fn = os.path.join(self.cwd, 'age_groups', str(a))
+            self.age_groups[a] = Workspace.load_or_compute(pickle_fn, compute)
 
     def summarize_genders(self):
-        for g in self.users.genders:
+        def compute():
             movie_ratings = self.ratings.for_gender(g, users=self.users)
-            self.genders[g] = Workspace.summary_stats(movie_ratings)
+            return Workspace.summary_stats(movie_ratings)
+
+        for g in self.users.genders:
+            pickle_fn = os.path.join(self.cwd, 'genders', str(g))
+            self.genders[g] = Workspace.load_or_compute(pickle_fn, compute)
 
     def summarize_occupations(self):
-        for o in self.users.occupations:
+        def compute():
             movie_ratings = self.ratings.for_occupation(o, users=self.users)
-            self.occupations[o] = Workspace.summary_stats(movie_ratings)
+            return Workspace.summary_stats(movie_ratings)
+
+        for o in self.users.occupations:
+            pickle_fn = os.path.join(self.cwd, 'occupations', str(o))
+            self.occupations[o] = Workspace.load_or_compute(pickle_fn, compute)
+
+    @staticmethod
+    def load_or_compute(pickle_fn, compute):
+        if os.path.isfile(pickle_fn):
+            result = pickle.load(open(pickle_fn))
+        else:
+            result = compute()
+            pickle.dump(result, open(pickle_fn, 'wb'))
+        return result
 
     @staticmethod
     def summary_stats(movie_ratings):
