@@ -9,7 +9,7 @@ class Movies(object):
 
         # define sets of existing movie types
         self.tags = reduce(lambda s, t: s | set(t), [m.tags for m in self.movies], set())
-        self.decades = {m.year // 10 * 10 for m in self.movies}
+        self.decades = {m.decade() for m in self.movies}
 
     def __getitem__(self, item):
         try:
@@ -47,6 +47,9 @@ class Movie(object):
         self.amean = amean
         self.hmean = hmean
         self.var = var
+
+    def decade(self):
+        return self.year // 10 * 10
 
     @staticmethod
     def parse_entry(line):

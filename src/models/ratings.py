@@ -14,6 +14,18 @@ class Ratings(object):
     def for_tag(self, tag, movies):
         return [r for r in self.ratings if tag in movies[r.m_id].tags]
 
+    def for_decade(self, decade, movies):
+        return [r for r in self.ratings if movies[r.m_id].decade() == decade]
+
+    def for_age_group(self, age_group, users):
+        return [r for r in self.ratings if users[r.u_id].age_group == age_group]
+
+    def for_gender(self, is_male, users):
+        return [r for r in self.ratings if users[r.u_id].is_male == is_male]
+
+    def for_occupation(self, occupation, users):
+        return [r for r in self.ratings if users[r.u_id].occupation == occupation]
+
     @staticmethod
     def parse_stream(stream):
         ratings = [Rating.parse_entry(id_, line) for id_, line in enumerate(stream)]

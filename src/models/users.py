@@ -30,7 +30,7 @@ class Users(object):
 
         # define sets of existing user types
         self.genders = {True, False}
-        self.occupations = set(Occupations)
+        self.occupations = {u.occupation for u in self.users}
         self.age_groups = {u.age_group for u in self.users}
 
     def __getitem__(self, item):

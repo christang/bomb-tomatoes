@@ -15,10 +15,18 @@ class Workspace(object):
         self.ratings = ratings
         self.users = users
         self.tags = {}
+        self.decades = {}
+        self.age_groups = {}
+        self.genders = {}
+        self.occupations = {}
 
         self.summarize_movies()
         self.summarize_users()
         self.summarize_tags()
+        self.summarize_decades()
+        self.summarize_age_groups()
+        self.summarize_genders()
+        self.summarize_occupations()
 
     def summarize_movies(self):
         for m in self.movies.movies:
@@ -34,6 +42,26 @@ class Workspace(object):
         for t in self.movies.tags:
             movie_ratings = self.ratings.for_tag(t, movies=self.movies)
             self.tags[t] = Workspace.summary_stats(movie_ratings)
+
+    def summarize_decades(self):
+        for d in self.movies.decades:
+            movie_ratings = self.ratings.for_decade(d, movies=self.movies)
+            self.decades[d] = Workspace.summary_stats(movie_ratings)
+
+    def summarize_age_groups(self):
+        for a in self.users.age_groups:
+            movie_ratings = self.ratings.for_age_group(a, users=self.users)
+            self.age_groups[a] = Workspace.summary_stats(movie_ratings)
+
+    def summarize_genders(self):
+        for g in self.users.genders:
+            movie_ratings = self.ratings.for_gender(g, users=self.users)
+            self.genders[g] = Workspace.summary_stats(movie_ratings)
+
+    def summarize_occupations(self):
+        for o in self.users.occupations:
+            movie_ratings = self.ratings.for_occupation(o, users=self.users)
+            self.occupations[o] = Workspace.summary_stats(movie_ratings)
 
     @staticmethod
     def summary_stats(movie_ratings):
