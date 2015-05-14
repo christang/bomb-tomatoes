@@ -11,6 +11,9 @@ class Ratings(object):
     def for_user(self, id_):
         return [r for r in self.ratings if r.u_id == id_]
 
+    def for_tag(self, tag, movies):
+        return [r for r in self.ratings if tag in movies[r.m_id].tags]
+
     @staticmethod
     def parse_stream(stream):
         ratings = [Rating.parse_entry(id_, line) for id_, line in enumerate(stream)]
