@@ -6,7 +6,10 @@ class Movies(object):
     def __init__(self, movies):
         self.movies = movies
         self.movies_by_ID = {v.ID: k for k, v in enumerate(self.movies)}
+
+        # define sets of existing movie types
         self.tags = reduce(lambda s, t: s | set(t), [m.tags for m in self.movies], set())
+        self.decades = {m.year // 10 * 10 for m in self.movies}
 
     def __getitem__(self, item):
         try:

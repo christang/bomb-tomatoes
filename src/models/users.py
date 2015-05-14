@@ -28,6 +28,11 @@ class Users(object):
     def __init__(self, users):
         self.users = users
 
+        # define sets of existing user types
+        self.genders = {True, False}
+        self.occupations = set(Occupations)
+        self.age_groups = {u.age_group for u in self.users}
+
     def __getitem__(self, item):
         try:
             user = self.users[item-1]
