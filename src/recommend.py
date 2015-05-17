@@ -11,7 +11,7 @@ from workspace import Workspace
 
 class Metric(object):
 
-    def __init__(self, truth, model):
+    def __init__(self, truth, guess):
         pass
 
     def __repr__(self):
@@ -39,13 +39,13 @@ def get_performance(users, movies, ratings, k, uid_subset, Recommender):
     recommender = Recommender(users, movies, ratings)
     recommender.train(folds.train_on(k, uid_subset))
     truth = {}
-    model = {}
+    guess = {}
 
     for uid in uid_subset:
         truth[uid] = get_truth(uid, ratings, k, folds)
-        model[uid] = get_guess(recommender, truth, uid)
+        guess[uid] = get_guess(recommender, truth, uid)
 
-    return Metric(truth, model)
+    return Metric(truth, guess)
 
 def load_data(data_dir):
     users = Users.parse_stream(open(os.path.join(data_dir, 'users.dat')))
