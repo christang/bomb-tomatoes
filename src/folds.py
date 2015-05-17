@@ -8,7 +8,7 @@ class Folds(object):
     def __init__(self, users, k=5, limit_users=6040):
         self.k = k
         self.users = users
-        self.folds = {u.ID: cross_validation.KFold(u.count, n_folds=k, shuffle=True)
+        self.folds = {u.ID: expand(cross_validation.KFold(u.count, n_folds=k, shuffle=True))
                       for u in users.users if u.ID <= limit_users}
 
     def show(self, first_n=25):
@@ -29,6 +29,10 @@ class Folds(object):
         for k in xrange(self.k):
             print "TRAIN %d %s" % (k, ','.join(train[k][:first_n]))
             print "TEST %d %s" % (k, ','.join(test[k][:first_n]))
+
+
+def expand(kf):
+    return [(train, test) for train, test in kf]
 
 
 if __name__ == '__main__':
