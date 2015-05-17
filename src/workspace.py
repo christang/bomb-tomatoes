@@ -1,4 +1,4 @@
-import cPickle as pickle
+import cPickle
 import numpy as np
 import os
 import scipy.stats as spstats
@@ -84,10 +84,10 @@ class Workspace(object):
     @staticmethod
     def load_or_compute(pickle_fn, compute):
         if os.path.isfile(pickle_fn):
-            result = pickle.load(open(pickle_fn))
+            result = cPickle.load(open(pickle_fn))
         else:
             result = compute()
-            pickle.dump(result, open(pickle_fn, 'wb'))
+            cPickle.dump(result, open(pickle_fn, 'wb'))
         return result
 
     @staticmethod
