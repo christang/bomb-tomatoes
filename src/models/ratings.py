@@ -1,3 +1,4 @@
+import functools
 
 
 class Ratings(object):
@@ -32,6 +33,7 @@ class Ratings(object):
         return Ratings(ratings)
 
 
+@functools.total_ordering
 class Rating(object):
 
     def __init__(self, id_, u_id, m_id, rating, timestamp):
@@ -48,3 +50,11 @@ class Rating(object):
 
     def __repr__(self):
         return '::'.join([str(self.u_id), str(self.m_id), str(self.rating), self.timestamp])
+
+    def __lt__(self, other):
+        if self.rating != other.rating:
+            return self.rating > other.rating
+        elif self.m_id != other.m_id:
+            return self.m_id < other.m_id
+        elif self.u_id != other.u_id:
+            return self.u_id < other.u_id
