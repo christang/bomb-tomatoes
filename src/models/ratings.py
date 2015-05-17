@@ -27,6 +27,10 @@ class Ratings(object):
     def for_occupation(self, occupation, users):
         return [r for r in self.ratings if users[r.u_id].occupation == occupation]
 
+    def get(self, indices):
+        for i in indices:
+            yield self.ratings[i]
+
     @staticmethod
     def parse_stream(stream):
         ratings = [Rating.parse_entry(id_, line) for id_, line in enumerate(stream)]
