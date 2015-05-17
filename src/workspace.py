@@ -18,14 +18,6 @@ class Workspace(object):
         self.genders = {}
         self.occupations = {}
 
-        self.summarize_movies()
-        self.summarize_users()
-        self.summarize_tags()
-        self.summarize_decades()
-        self.summarize_age_groups()
-        self.summarize_genders()
-        self.summarize_occupations()
-
     def summarize_movies(self):
         def compute():
             movie_ratings = self.ratings.for_movie(m.ID)
