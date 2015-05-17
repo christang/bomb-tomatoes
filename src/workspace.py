@@ -3,10 +3,6 @@ import numpy as np
 import os
 import scipy.stats as spstats
 
-from models.movies import Movies
-from models.ratings import Ratings
-from models.users import Users
-
 
 class Workspace(object):
 
@@ -115,24 +111,3 @@ class Workspace(object):
             hmean = np.NaN
             var = np.NaN
         return r_ids, count, amean, hmean, var
-
-
-def get_workspace(data_dir):
-
-    cwd = data_dir
-    pickle_fn = os.path.join(cwd, 'stats.pkl')
-
-    if not os.path.isfile(pickle_fn):
-        movies = Movies.parse_stream(open(os.path.join(cwd, 'movies.dat')))
-        ratings = Ratings.parse_stream(open(os.path.join(cwd, 'ratings.dat')))
-        users = Users.parse_stream(open(os.path.join(cwd, 'users.dat')))
-
-        stats = Workspace(movies, ratings, users)
-        pickle.dump(stats, open(pickle_fn, 'wb'))
-    else:
-        stats = pickle.load(open(pickle_fn))
-
-    return stats
-
-if __name__ == '__main__':
-    get_workspace('dat/ml-1m')
