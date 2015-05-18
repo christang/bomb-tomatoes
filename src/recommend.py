@@ -16,6 +16,7 @@ def get_guess(recommender, truth, uid):
         return recommender.rank_users_movies([uid], [m.movie for m in truth[uid]])[uid]
     return [r for r in _generator()]
 
+
 def get_truth(uid, ratings, k, folds):
     def _generator():
         last_rank = 0
@@ -27,6 +28,7 @@ def get_truth(uid, ratings, k, folds):
             yield Rank(user=sr.u_id, movie=sr.m_id, rank=last_rank, score=sr.rating)
     sorted_ratings = sorted(ratings.get(folds.test_on(k, [uid])))
     return [r for r in _generator()]
+
 
 def get_performance(users, movies, ratings, k, uid_subset, metrics, Recommender):
     folds = Folds(users)
@@ -41,6 +43,7 @@ def get_performance(users, movies, ratings, k, uid_subset, metrics, Recommender)
 
     return (m(truth, guess) for m in metrics)
 
+
 def load_data(data_dir):
     users = Users.parse_stream(open(os.path.join(data_dir, 'users.dat')))
     movies = Movies.parse_stream(open(os.path.join(data_dir, 'movies.dat')))
@@ -50,6 +53,7 @@ def load_data(data_dir):
     w.summarize_users()
     w.summarize_movies()
     return users, movies, ratings
+
 
 def main():
     cwd = 'dat/ml-1m'
@@ -64,6 +68,7 @@ def main():
         print '======'
         for p in perf:
             print p
+
 
 if __name__ == '__main__':
     main()
