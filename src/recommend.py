@@ -1,6 +1,8 @@
 import os
 
 from folds import Folds
+from metrics.rmse import RMSEMetric
+from metrics.kendall_tau import KendallTauMetric
 from models.movies import Movies
 from models.ratings import Ratings
 from models.users import Users
@@ -8,14 +10,6 @@ from recommenders.base import Rank
 from recommenders.perfect import PerfectRecommender
 from workspace import Workspace
 
-
-class Metric(object):
-
-    def __init__(self, truth, guess):
-        pass
-
-    def __repr__(self):
-        return super(Metric, self).__repr__()
 
 def get_guess(recommender, truth, uid):
     def _generator():
@@ -34,7 +28,7 @@ def get_truth(uid, ratings, k, folds):
     sorted_ratings = sorted(ratings.get(folds.test_on(k, [uid])))
     return [r for r in _generator()]
 
-def get_performance(users, movies, ratings, k, uid_subset, Recommender):
+def get_performance(users, movies, ratings, k, uid_subset, metrics, Recommender):
     folds = Folds(users)
     recommender = Recommender(users, movies, ratings)
     recommender.train(folds.train_on(k, uid_subset))
@@ -45,7 +39,7 @@ def get_performance(users, movies, ratings, k, uid_subset, Recommender):
         truth[uid] = get_truth(uid, ratings, k, folds)
         guess[uid] = get_guess(recommender, truth, uid)
 
-    return Metric(truth, guess)
+    return (m(truth, guess) for m in metrics)
 
 def load_data(data_dir):
     users = Users.parse_stream(open(os.path.join(data_dir, 'users.dat')))
@@ -62,8 +56,14 @@ def main():
     users, movies, ratings = load_data(cwd)
 
     uid_subset = [1, 6040]
-    metrics = get_performance(users, movies, ratings, 0, uid_subset, PerfectRecommender)
+    metrics = (RMSEMetric, KendallTauMetric)
 
+    for k in xrange(1):
+        perf = get_performance(users, movies, ratings, k, uid_subset, metrics, PerfectRecommender)
+        print 'Fold %d' % (k+1)
+        print '======'
+        for p in perf:
+            print p
 
 if __name__ == '__main__':
     main()
