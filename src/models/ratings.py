@@ -6,6 +6,11 @@ class Ratings(object):
     def __init__(self, ratings):
         self.ratings = ratings
 
+    def for_subset(self, uids, mids):
+        uid_set = set(uids)
+        mid_set = set(mids)
+        return [r for r in self.ratings if r.u_id in uid_set and r.m_id in mid_set]
+
     def for_movie(self, id_):
         return [r for r in self.ratings if r.m_id == id_]
 

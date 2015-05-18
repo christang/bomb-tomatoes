@@ -1,4 +1,4 @@
-from base import *
+from base import BaseRecommender, Rank
 
 
 class PerfectRecommender(BaseRecommender):
