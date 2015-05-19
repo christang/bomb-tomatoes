@@ -8,6 +8,7 @@ from models.ratings import Ratings
 from models.users import Users
 from recommenders.base import Rank
 from recommenders.perfect import PerfectRecommender
+from recommenders.trivial import TrivialArithMeanRecommender, TrivialHarmMeanRecommender
 from workspace import Workspace
 
 
@@ -61,13 +62,18 @@ def main():
 
     uid_subset = [1, 6040]
     metrics = (RMSEMetric, KendallTauMetric)
+    recommenders = (PerfectRecommender, TrivialArithMeanRecommender, TrivialHarmMeanRecommender)
 
-    for k in xrange(1):
-        perf = get_performance(users, movies, ratings, k, uid_subset, metrics, PerfectRecommender)
-        print 'Fold %d' % (k+1)
-        print '======'
-        for p in perf:
-            print p
+    for recommender in recommenders:
+        print recommender.__name__
+        for k in xrange(2):
+            perf = get_performance(users, movies, ratings, k, uid_subset, metrics, recommender)
+            print 'Fold %d' % (k+1)
+            print '======'
+            for p in perf:
+                print p
+
+        print
 
 
 if __name__ == '__main__':
