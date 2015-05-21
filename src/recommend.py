@@ -7,6 +7,7 @@ from models.movies import Movies
 from models.ratings import Ratings
 from models.users import Users
 from recommenders.base import Rank
+from recommenders.bomtom import BomTomRecommender
 from recommenders.perfect import PerfectRecommender
 from recommenders.trivial import TrivialArithMeanRecommender, TrivialHarmMeanRecommender
 from workspace import Workspace
@@ -62,7 +63,8 @@ def main():
 
     uid_subset = [1, 6040]
     metrics = (RMSEMetric, KendallTauMetric)
-    recommenders = (PerfectRecommender, TrivialArithMeanRecommender, TrivialHarmMeanRecommender)
+    recommenders = (PerfectRecommender, TrivialArithMeanRecommender, TrivialHarmMeanRecommender,
+                    BomTomRecommender)
 
     for recommender in recommenders:
         print recommender.__name__
