@@ -22,6 +22,18 @@ class BaseRecommender(object):
         uid_subset = uid_subset or xrange(1, len(self.users.users) + 1)
         return {uid: self.rank_movies(uid, mid_subset) for uid in uid_subset}
 
+    @staticmethod
+    def sort_and_yield(ratings, uid):
+        ratings.sort(key=lambda r: -r[1])
+
+        last_rank = 0
+        last_rating = None
+        for r in ratings:
+            if r[1] != last_rating:
+                last_rank += 1
+                last_rating = r[1]
+            yield Rank(user=uid, movie=r[0], rank=last_rank, score=r[1])
+
     def train(self, training_set_gen):
         pass
 
