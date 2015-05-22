@@ -2,10 +2,12 @@
 
 class BaseMetric(object):
 
-    def __init__(self, truth, guess, label='?'):
+    def __init__(self, truth, guess, name='?', fold='?', debug=True):
         self.truth = truth
         self.guess = guess
-        self.label = label
+        self.name = name
+        self.fold = fold
+        self.debug = debug
 
     def evaluate(self, key):
         return None

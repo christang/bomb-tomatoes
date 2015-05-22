@@ -1,4 +1,5 @@
 import collections
+import logging
 import math
 from sklearn.metrics import mean_squared_error
 
@@ -31,9 +32,15 @@ class RMSEMetric(BaseMetric):
     def evaluate_all(self):
         all_true = []
         all_pred = []
+        logging.info((self.name, self.fold))
         for key in self.keys():
             y_true, y_pred = self.ordered_scores(key)
+            if self.debug:
+                rmse = math.sqrt(mean_squared_error(y_true=y_true, y_pred=y_pred))
+                logging.info(RMSEUser(user=key, rmse=rmse))
             all_true.extend(y_true)
             all_pred.extend(y_pred)
         rmse = math.sqrt(mean_squared_error(y_true=all_true, y_pred=all_pred))
-        return [RMSEFold(fold=self.label, rmse=rmse)]
+        stat = RMSEFold(fold=self.fold, rmse=rmse)
+        logging.info(stat)
+        return [stat]

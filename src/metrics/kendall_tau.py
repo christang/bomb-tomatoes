@@ -1,4 +1,5 @@
 import collections
+import logging
 from scipy.stats import kendalltau
 
 from base import BaseMetric
@@ -30,9 +31,15 @@ class KendallTauMetric(BaseMetric):
     def evaluate_all(self):
         all_true = []
         all_pred = []
+        logging.info((self.name, self.fold))
         for key in self.keys():
             y_true, y_pred = self.ordered_scores(key)
+            if self.debug:
+                tau, p_value = kendalltau(y_true, y_pred)
+                logging.info(KendallTauUser(user=key, tau=tau, p=p_value))
             all_true.extend(y_true)
             all_pred.extend(y_pred)
         tau, p_value = kendalltau(all_true, all_pred)
-        return [KendallTauFold(fold=self.label, tau=tau, p=p_value)]
+        stat = KendallTauFold(fold=self.fold, tau=tau, p=p_value)
+        logging.info(stat)
+        return [stat]
