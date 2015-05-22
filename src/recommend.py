@@ -1,3 +1,4 @@
+import logging
 import os
 
 from folds import Folds
@@ -11,6 +12,9 @@ from recommenders.bomtom import BomTomRecommender
 from recommenders.perfect import PerfectRecommender
 from recommenders.trivial import TrivialArithMeanRecommender, TrivialHarmMeanRecommender
 from workspace import Workspace
+
+
+logging.basicConfig(filename='detail.log', filemode='w', level=logging.INFO)
 
 
 def get_guess(recommender, truth, uid):
@@ -43,7 +47,7 @@ def get_performance(users, movies, ratings, k, uid_subset, metrics, Recommender)
         truth[uid] = get_truth(uid, ratings, k, folds)
         guess[uid] = get_guess(recommender, truth, uid)
 
-    return (m(truth, guess) for m in metrics)
+    return (m(truth, guess, recommender.name(), k+1) for m in metrics)
 
 
 def load_data(data_dir):
@@ -61,20 +65,22 @@ def main():
     cwd = 'dat/ml-1m'
     users, movies, ratings = load_data(cwd)
 
-    uid_subset = [1, 6040]
+    uid_subset = [uid for uid in xrange(1, 101) if users[uid].count > 20]
     metrics = (RMSEMetric, KendallTauMetric)
     recommenders = (PerfectRecommender, TrivialArithMeanRecommender, TrivialHarmMeanRecommender,
                     BomTomRecommender)
 
+    max_folds = 5
+    print 'users.count : %d' % len(uid_subset)
     for recommender in recommenders:
-        print recommender.__name__
-        for k in xrange(2):
+        perfs = []
+        for k in xrange(max_folds):
             perf = get_performance(users, movies, ratings, k, uid_subset, metrics, recommender)
-            print 'Fold %d' % (k+1)
-            print '======'
-            for p in perf:
-                print p
+            perfs.append(list(perf))
 
+        print recommender.__name__
+        for k in xrange(max_folds):
+            print 'Fold %d\t%s\t%s' % (k+1, perfs[k][0], perfs[k][1])
         print
 
 

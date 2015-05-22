@@ -13,6 +13,9 @@ class BaseRecommender(object):
         self.movies = movies
         self.ratings = ratings
 
+    def name(self):
+        return self.__class__.__name__
+
     def rank_movies(self, uid, mid_subset=None):
         mid_subset = mid_subset or self.movies.movies_by_ID.keys()
         for mid in mid_subset:
