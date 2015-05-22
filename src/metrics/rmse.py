@@ -10,7 +10,7 @@ class RMSE(collections.namedtuple('RMSE', 'user rmse')):
     __slots__ = ()
 
     def __repr__(self):
-        return 'rmse(u:%d)=%4.2f' % (self.user, self.rmse)
+        return 'rmse(u:%s)=%4.2f' % (str(self.user), self.rmse)
 
 
 class RMSEMetric(BaseMetric):
@@ -19,3 +19,13 @@ class RMSEMetric(BaseMetric):
         y_true, y_pred = self.ordered_scores(key)
         rmse = math.sqrt(mean_squared_error(y_true=y_true, y_pred=y_pred))
         return RMSE(user=key, rmse=rmse)
+
+    def evaluate_all(self):
+        all_true = []
+        all_pred = []
+        for key in self.keys():
+            y_true, y_pred = self.ordered_scores(key)
+            all_true.extend(y_true)
+            all_pred.extend(y_pred)
+        rmse = math.sqrt(mean_squared_error(y_true=all_true, y_pred=all_pred))
+        return [RMSE(user='all', rmse=rmse)]
