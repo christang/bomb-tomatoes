@@ -2,9 +2,10 @@
 
 class BaseMetric(object):
 
-    def __init__(self, truth, guess):
+    def __init__(self, truth, guess, label='?'):
         self.truth = truth
         self.guess = guess
+        self.label = label
 
     def evaluate(self, key):
         return None
