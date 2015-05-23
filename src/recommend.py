@@ -65,23 +65,29 @@ def main():
     cwd = 'dat/ml-1m'
     users, movies, ratings = load_data(cwd)
 
-    uid_subset = [uid for uid in xrange(1, 101) if users[uid].count > 20]
+    uid_subsets = [
+        ('20 to 29', [uid for uid in xrange(1, 501) if 20 <= users[uid].count < 30]),
+        ('30 to 49', [uid for uid in xrange(1, 501) if 20 <= users[uid].count < 50]),
+        ('50 to 99', [uid for uid in xrange(1, 501) if 50 <= users[uid].count < 100]),
+        ('100 to 999', [uid for uid in xrange(1, 501) if 100 <= users[uid].count < 1000])
+    ]
+    max_folds = 5
     metrics = (RMSEMetric, KendallTauMetric)
     recommenders = (PerfectRecommender, TrivialArithMeanRecommender, TrivialHarmMeanRecommender,
                     BomTomRecommender)
 
-    max_folds = 5
-    print 'users.count : %d' % len(uid_subset)
-    for recommender in recommenders:
-        perfs = []
-        for k in xrange(max_folds):
-            perf = get_performance(users, movies, ratings, k, uid_subset, metrics, recommender)
-            perfs.append(list(perf))
+    for label, uid_subset in uid_subsets:
+        print 'users.count w/ %s ratings : %d' % (label, len(uid_subset))
+        for recommender in recommenders:
+            perfs = []
+            for k in xrange(max_folds):
+                perf = get_performance(users, movies, ratings, k, uid_subset, metrics, recommender)
+                perfs.append(list(perf))
 
-        print recommender.__name__
-        for k in xrange(max_folds):
-            print 'Fold %d\t%s\t%s' % (k+1, perfs[k][0], perfs[k][1])
-        print
+            print recommender.__name__
+            for k in xrange(max_folds):
+                print 'Fold %d\t%s\t%s' % (k+1, perfs[k][0], perfs[k][1])
+            print
 
 
 if __name__ == '__main__':
