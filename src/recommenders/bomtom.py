@@ -15,7 +15,7 @@ class UserProfile(object):
         #print 'f_coeffs = ', self.f_coeffs
 
     def rate(self, movie):
-        score = movie.hmean
+        score = movie.amean
         for tag, coeff in self.f_coeffs.items():
             a = 1 if tag in movie.tags else UserProfile.untagged
             score += a * coeff
@@ -33,7 +33,7 @@ class UserProfile(object):
             for j, tag in enumerate(f_index):
                 # Take MovieLens tags at *mostly* face value :-)
                 A[i, j] = 1 if tag in movies[m_id].tags else UserProfile.untagged
-            b[i, 0] = ratings[m_id] - movies[m_id].hmean
+            b[i, 0] = ratings[m_id] - movies[m_id].amean
 
         if len(m_index) < 1000:
             x = UserProfile.solve_least_squares(A, b)
