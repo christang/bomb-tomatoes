@@ -36,7 +36,7 @@ class UserProfile(object):
             b[i, 0] = ratings[m_id] - movies[m_id].hmean
 
         if len(m_index) < 1000:
-            x = UserProfile.solve_normal_equations(A, b)
+            x = UserProfile.solve_least_squares(A, b)
         else:
             # don't solve for now
             raise Exception('too many movies')
@@ -51,17 +51,9 @@ class UserProfile(object):
         return x
 
     @staticmethod
-    def solve_qr_factorization(A, b):
-        # Given A=QR, solve: QRx=b
-        # => Rx=Q' dot b
-        # => x=R^-1 dot Q' dot b
-        q, r = np.linalg.qr(A)
-        x = np.linalg.inv(r).dot(q.T).dot(b)
+    def solve_least_squares(A, b):
+        x, resid, rank, s = np.linalg.lstsq(A, b, rcond=UserProfile.untagged)
         return x
-
-    @staticmethod
-    def solve_singular_value_decomp(A, b):
-        pass
 
 
 class BomTomRecommender(BaseRecommender):
