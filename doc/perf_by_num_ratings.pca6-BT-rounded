@@ -1,0 +1,115 @@
+users.count w/ 20 to 29 ratings : 74
+PerfectRecommender
+Fold 1	RMSEMetric : rmse(f:1)=0.00	KendallTauMetric : tau(f:1)=1.00[1.13e-189]
+Fold 2	RMSEMetric : rmse(f:2)=0.00	KendallTauMetric : tau(f:2)=1.00[2.33e-181]
+Fold 3	RMSEMetric : rmse(f:3)=0.00	KendallTauMetric : tau(f:3)=1.00[1.56e-173]
+Fold 4	RMSEMetric : rmse(f:4)=0.00	KendallTauMetric : tau(f:4)=1.00[1.16e-167]
+Fold 5	RMSEMetric : rmse(f:5)=0.00	KendallTauMetric : tau(f:5)=1.00[8.17e-161]
+
+TrivialArithMeanRecommender
+Fold 1	RMSEMetric : rmse(f:1)=1.04	KendallTauMetric : tau(f:1)=0.28[6.28e-16]
+Fold 2	RMSEMetric : rmse(f:2)=1.08	KendallTauMetric : tau(f:2)=0.27[3.10e-15]
+Fold 3	RMSEMetric : rmse(f:3)=1.06	KendallTauMetric : tau(f:3)=0.31[2.94e-18]
+Fold 4	RMSEMetric : rmse(f:4)=1.05	KendallTauMetric : tau(f:4)=0.21[4.11e-09]
+Fold 5	RMSEMetric : rmse(f:5)=1.01	KendallTauMetric : tau(f:5)=0.28[4.39e-14]
+
+TrivialHarmMeanRecommender
+Fold 1	RMSEMetric : rmse(f:1)=1.22	KendallTauMetric : tau(f:1)=0.23[2.06e-11]
+Fold 2	RMSEMetric : rmse(f:2)=1.09	KendallTauMetric : tau(f:2)=0.33[5.39e-21]
+Fold 3	RMSEMetric : rmse(f:3)=1.20	KendallTauMetric : tau(f:3)=0.25[8.08e-13]
+Fold 4	RMSEMetric : rmse(f:4)=1.16	KendallTauMetric : tau(f:4)=0.32[1.29e-18]
+Fold 5	RMSEMetric : rmse(f:5)=1.23	KendallTauMetric : tau(f:5)=0.26[5.01e-12]
+
+BomTomRecommender
+Fold 1	RMSEMetric : rmse(f:1)=1.45	KendallTauMetric : tau(f:1)=0.31[2.19e-19]
+Fold 2	RMSEMetric : rmse(f:2)=1.24	KendallTauMetric : tau(f:2)=0.23[4.28e-11]
+Fold 3	RMSEMetric : rmse(f:3)=1.22	KendallTauMetric : tau(f:3)=0.22[1.03e-09]
+Fold 4	RMSEMetric : rmse(f:4)=1.27	KendallTauMetric : tau(f:4)=0.28[5.35e-15]
+Fold 5	RMSEMetric : rmse(f:5)=1.51	KendallTauMetric : tau(f:5)=0.37[4.44e-23]
+
+users.count w/ 30 to 49 ratings : 151
+PerfectRecommender
+Fold 1	RMSEMetric : rmse(f:1)=0.00	KendallTauMetric : tau(f:1)=1.00[0.00e+00]
+Fold 2	RMSEMetric : rmse(f:2)=0.00	KendallTauMetric : tau(f:2)=1.00[0.00e+00]
+Fold 3	RMSEMetric : rmse(f:3)=0.00	KendallTauMetric : tau(f:3)=1.00[0.00e+00]
+Fold 4	RMSEMetric : rmse(f:4)=0.00	KendallTauMetric : tau(f:4)=1.00[0.00e+00]
+Fold 5	RMSEMetric : rmse(f:5)=0.00	KendallTauMetric : tau(f:5)=1.00[0.00e+00]
+
+TrivialArithMeanRecommender
+Fold 1	RMSEMetric : rmse(f:1)=1.04	KendallTauMetric : tau(f:1)=0.27[7.73e-39]
+Fold 2	RMSEMetric : rmse(f:2)=1.08	KendallTauMetric : tau(f:2)=0.27[2.08e-37]
+Fold 3	RMSEMetric : rmse(f:3)=1.06	KendallTauMetric : tau(f:3)=0.28[1.24e-39]
+Fold 4	RMSEMetric : rmse(f:4)=1.05	KendallTauMetric : tau(f:4)=0.33[1.52e-51]
+Fold 5	RMSEMetric : rmse(f:5)=1.07	KendallTauMetric : tau(f:5)=0.31[6.66e-45]
+
+TrivialHarmMeanRecommender
+Fold 1	RMSEMetric : rmse(f:1)=1.11	KendallTauMetric : tau(f:1)=0.33[5.52e-56]
+Fold 2	RMSEMetric : rmse(f:2)=1.17	KendallTauMetric : tau(f:2)=0.26[1.46e-35]
+Fold 3	RMSEMetric : rmse(f:3)=1.12	KendallTauMetric : tau(f:3)=0.34[5.89e-55]
+Fold 4	RMSEMetric : rmse(f:4)=1.14	KendallTauMetric : tau(f:4)=0.31[2.23e-45]
+Fold 5	RMSEMetric : rmse(f:5)=1.16	KendallTauMetric : tau(f:5)=0.30[1.05e-42]
+
+BomTomRecommender
+Fold 1	RMSEMetric : rmse(f:1)=1.36	KendallTauMetric : tau(f:1)=0.28[4.30e-40]
+Fold 2	RMSEMetric : rmse(f:2)=1.34	KendallTauMetric : tau(f:2)=0.33[2.43e-56]
+Fold 3	RMSEMetric : rmse(f:3)=1.43	KendallTauMetric : tau(f:3)=0.33[1.28e-52]
+Fold 4	RMSEMetric : rmse(f:4)=1.16	KendallTauMetric : tau(f:4)=0.32[2.45e-47]
+Fold 5	RMSEMetric : rmse(f:5)=1.18	KendallTauMetric : tau(f:5)=0.30[6.80e-42]
+
+users.count w/ 50 to 99 ratings : 129
+PerfectRecommender
+Fold 1	RMSEMetric : rmse(f:1)=0.00	KendallTauMetric : tau(f:1)=1.00[0.00e+00]
+Fold 2	RMSEMetric : rmse(f:2)=0.00	KendallTauMetric : tau(f:2)=1.00[0.00e+00]
+Fold 3	RMSEMetric : rmse(f:3)=0.00	KendallTauMetric : tau(f:3)=1.00[0.00e+00]
+Fold 4	RMSEMetric : rmse(f:4)=0.00	KendallTauMetric : tau(f:4)=1.00[0.00e+00]
+Fold 5	RMSEMetric : rmse(f:5)=0.00	KendallTauMetric : tau(f:5)=1.00[0.00e+00]
+
+TrivialArithMeanRecommender
+Fold 1	RMSEMetric : rmse(f:1)=1.04	KendallTauMetric : tau(f:1)=0.37[7.38e-127]
+Fold 2	RMSEMetric : rmse(f:2)=0.99	KendallTauMetric : tau(f:2)=0.35[8.01e-114]
+Fold 3	RMSEMetric : rmse(f:3)=1.05	KendallTauMetric : tau(f:3)=0.36[1.34e-120]
+Fold 4	RMSEMetric : rmse(f:4)=1.03	KendallTauMetric : tau(f:4)=0.37[9.98e-125]
+Fold 5	RMSEMetric : rmse(f:5)=1.05	KendallTauMetric : tau(f:5)=0.33[1.00e-97]
+
+TrivialHarmMeanRecommender
+Fold 1	RMSEMetric : rmse(f:1)=1.13	KendallTauMetric : tau(f:1)=0.36[4.21e-121]
+Fold 2	RMSEMetric : rmse(f:2)=1.16	KendallTauMetric : tau(f:2)=0.33[2.85e-101]
+Fold 3	RMSEMetric : rmse(f:3)=1.16	KendallTauMetric : tau(f:3)=0.33[2.63e-100]
+Fold 4	RMSEMetric : rmse(f:4)=1.12	KendallTauMetric : tau(f:4)=0.37[3.76e-121]
+Fold 5	RMSEMetric : rmse(f:5)=1.12	KendallTauMetric : tau(f:5)=0.35[7.79e-111]
+
+BomTomRecommender
+Fold 1	RMSEMetric : rmse(f:1)=1.06	KendallTauMetric : tau(f:1)=0.37[7.01e-131]
+Fold 2	RMSEMetric : rmse(f:2)=1.07	KendallTauMetric : tau(f:2)=0.36[6.44e-121]
+Fold 3	RMSEMetric : rmse(f:3)=1.06	KendallTauMetric : tau(f:3)=0.37[1.52e-124]
+Fold 4	RMSEMetric : rmse(f:4)=1.05	KendallTauMetric : tau(f:4)=0.36[1.11e-116]
+Fold 5	RMSEMetric : rmse(f:5)=1.05	KendallTauMetric : tau(f:5)=0.37[1.14e-122]
+
+users.count w/ 100 to 999 ratings : 219
+PerfectRecommender
+Fold 1	RMSEMetric : rmse(f:1)=0.00	KendallTauMetric : tau(f:1)=1.00[0.00e+00]
+Fold 2	RMSEMetric : rmse(f:2)=0.00	KendallTauMetric : tau(f:2)=1.00[0.00e+00]
+Fold 3	RMSEMetric : rmse(f:3)=0.00	KendallTauMetric : tau(f:3)=1.00[0.00e+00]
+Fold 4	RMSEMetric : rmse(f:4)=0.00	KendallTauMetric : tau(f:4)=1.00[0.00e+00]
+Fold 5	RMSEMetric : rmse(f:5)=0.00	KendallTauMetric : tau(f:5)=1.00[0.00e+00]
+
+TrivialArithMeanRecommender
+Fold 1	RMSEMetric : rmse(f:1)=1.01	KendallTauMetric : tau(f:1)=0.37[0.00e+00]
+Fold 2	RMSEMetric : rmse(f:2)=1.01	KendallTauMetric : tau(f:2)=0.36[0.00e+00]
+Fold 3	RMSEMetric : rmse(f:3)=1.01	KendallTauMetric : tau(f:3)=0.36[0.00e+00]
+Fold 4	RMSEMetric : rmse(f:4)=1.01	KendallTauMetric : tau(f:4)=0.36[0.00e+00]
+Fold 5	RMSEMetric : rmse(f:5)=1.00	KendallTauMetric : tau(f:5)=0.38[0.00e+00]
+
+TrivialHarmMeanRecommender
+Fold 1	RMSEMetric : rmse(f:1)=1.10	KendallTauMetric : tau(f:1)=0.36[0.00e+00]
+Fold 2	RMSEMetric : rmse(f:2)=1.09	KendallTauMetric : tau(f:2)=0.37[0.00e+00]
+Fold 3	RMSEMetric : rmse(f:3)=1.10	KendallTauMetric : tau(f:3)=0.36[0.00e+00]
+Fold 4	RMSEMetric : rmse(f:4)=1.10	KendallTauMetric : tau(f:4)=0.36[0.00e+00]
+Fold 5	RMSEMetric : rmse(f:5)=1.11	KendallTauMetric : tau(f:5)=0.36[0.00e+00]
+
+BomTomRecommender
+Fold 1	RMSEMetric : rmse(f:1)=0.98	KendallTauMetric : tau(f:1)=0.42[0.00e+00]
+Fold 2	RMSEMetric : rmse(f:2)=0.98	KendallTauMetric : tau(f:2)=0.42[0.00e+00]
+Fold 3	RMSEMetric : rmse(f:3)=0.97	KendallTauMetric : tau(f:3)=0.43[0.00e+00]
+Fold 4	RMSEMetric : rmse(f:4)=0.98	KendallTauMetric : tau(f:4)=0.42[0.00e+00]
+Fold 5	RMSEMetric : rmse(f:5)=0.98	KendallTauMetric : tau(f:5)=0.42[0.00e+00]

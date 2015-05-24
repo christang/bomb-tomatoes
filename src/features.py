@@ -9,7 +9,6 @@ from lib.folds import SimpleUserFolds
 
 def save_components(cwd, A, k, movies_map):
     def compute():
-        print A[movies_map[m_id], :]
         return A[movies_map[m_id], :]
 
     components = {}
@@ -32,7 +31,7 @@ def load_or_compute(pickle_fn, compute):
 def build_features_matrix(k, movies, ratings):
     tags = sorted(movies.tags)
     rated_movies = {m_id: i for i, m_id in enumerate([m.ID for m in movies.movies if m.count > 0])}
-    training_set_users = {u_id: i for i, u_id in enumerate(SimpleUserFolds.training_set(k))}
+    training_set_users = {}
     shape = (len(rated_movies), len(training_set_users) + len(tags))
 
     A = np.zeros(shape)
@@ -43,7 +42,7 @@ def build_features_matrix(k, movies, ratings):
 
     for m_id, i in rated_movies.items():
         for j, tag in enumerate(tags):
-            s = 5 if tag in movies[m_id].tags else -5
+            s = 1 if tag in movies[m_id].tags else 0.0001
             A[i, len(training_set_users) + j] = s
 
     return A, rated_movies
@@ -56,9 +55,10 @@ def main():
 
     for k in xrange(1, 2):
         A, movies_map = build_features_matrix(k, movies, ratings)
-        pca = decomposition.PCA(n_components=100)
+        pca = decomposition.PCA(n_components=6)
         pca.fit(A)
-        print "Ratio of explained variances: " % (sum(pca.explained_variance_ratio_))
+        print pca.explained_variance_ratio_
+        print "Ratio of explained variances: %f" % (sum(pca.explained_variance_ratio_))
         save_components('dat/pkl', pca.transform(A), k, movies_map)
 
 if __name__ == '__main__':
