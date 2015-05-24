@@ -31,7 +31,7 @@ def load_or_compute(pickle_fn, compute):
 def build_features_matrix(k, movies, ratings):
     tags = sorted(movies.tags)
     rated_movies = {m_id: i for i, m_id in enumerate([m.ID for m in movies.movies if m.count > 0])}
-    training_set_users = {}
+    training_set_users = {u_id: i for i, u_id in enumerate(SimpleUserFolds.training_set(k))}
     shape = (len(rated_movies), len(training_set_users) + len(tags))
 
     A = np.zeros(shape)
@@ -55,7 +55,7 @@ def main():
 
     for k in xrange(1, 2):
         A, movies_map = build_features_matrix(k, movies, ratings)
-        pca = decomposition.PCA(n_components=6)
+        pca = decomposition.RandomizedPCA(n_components=10)
         pca.fit(A)
         print pca.explained_variance_ratio_
         print "Ratio of explained variances: %f" % (sum(pca.explained_variance_ratio_))
