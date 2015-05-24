@@ -3,12 +3,15 @@ import numpy as np
 import os
 import scipy.stats as spstats
 
+from models.movies import Movies
+from models.ratings import Ratings
+from models.users import Users
+
 
 class Workspace(object):
 
-    def __init__(self, movies, ratings, users, split, cwd='dat/pkl'):
+    def __init__(self, movies, ratings, users, cwd='dat/pkl'):
         self.cwd = cwd
-        self.split = split
 
         self.movies = movies
         self.ratings = ratings
@@ -82,13 +85,13 @@ class Workspace(object):
             pickle_fn = os.path.join(self.cwd, 'occupations', str(o))
             self.occupations[o] = Workspace.load_or_compute(pickle_fn, compute)
 
-    def extract_components(self):
+    def extract_components(self, split):
         def compute():
             raise Exception('run features.py to extract components')
 
         for m in self.movies.movies:
             if m.count > 0:
-                pickle_fn = os.path.join(self.cwd, 'components', '%02d' % self.split, str(m.ID))
+                pickle_fn = os.path.join(self.cwd, 'components', '%02d' % split, str(m.ID))
                 components = Workspace.load_or_compute(pickle_fn, compute)
                 self.movies[m.ID].components = np.ones(components.size + 1)
                 self.movies[m.ID].components[1:] = components  # components[0] === scale factor
@@ -115,3 +118,14 @@ class Workspace(object):
             hmean = np.NaN
             var = np.NaN
         return r_ids, count, amean, hmean, var
+
+
+def load_data(data_dir):
+    users = Users.parse_stream(open(os.path.join(data_dir, 'users.dat')))
+    movies = Movies.parse_stream(open(os.path.join(data_dir, 'movies.dat')))
+    ratings = Ratings.parse_stream(open(os.path.join(data_dir, 'ratings.dat')))
+
+    w = Workspace(movies, ratings, users)
+    w.summarize_users()
+    w.summarize_movies()
+    return w

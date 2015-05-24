@@ -1,13 +1,13 @@
 import logging
 
 from lib.folds import Folds, SimpleUserFolds
-from lib.io import load_data
+from lib.workspace import load_data
 from metrics.rmse import RMSEMetric
 from metrics.kendall_tau import KendallTauMetric
 from recommenders.base import Rank
 from recommenders.bomtom import BomTomRecommender
 from recommenders.perfect import PerfectRecommender
-from recommenders.trivial import TrivialArithMeanRecommender, TrivialHarmMeanRecommender
+from recommenders.trivial import TrivialArithMeanRecommender
 
 
 logging.basicConfig(filename='detail.log', filemode='w', level=logging.INFO)
@@ -32,15 +32,15 @@ def get_truth(uid, ratings, k, folds):
     return [r for r in _generator()]
 
 
-def get_performance(users, movies, ratings, k, uid_subset, metrics, Recommender):
-    folds = Folds(users)
-    recommender = Recommender(users, movies, ratings)
+def get_performance(workspace, k, uid_subset, metrics, Recommender):
+    folds = Folds(workspace.users)
+    recommender = Recommender(workspace.users, workspace.movies, workspace.ratings)
     recommender.train(folds.train_on(k, uid_subset))
     truth = {}
     guess = {}
 
     for uid in uid_subset:
-        truth[uid] = get_truth(uid, ratings, k, folds)
+        truth[uid] = get_truth(uid, workspace.ratings, k, folds)
         guess[uid] = get_guess(recommender, truth, uid)
 
     return (m(truth, guess, recommender.name(), k+1) for m in metrics)
@@ -49,13 +49,14 @@ def get_performance(users, movies, ratings, k, uid_subset, metrics, Recommender)
 def main():
     s = 1
     cwd = 'dat/ml-1m'
-    users, movies, ratings = load_data(cwd, split=s)
+    workspace = load_data(cwd)
+    workspace.extract_components(split=s)
 
     uid_subsets = [
-        ('20 to 29', [uid for uid in SimpleUserFolds.testing_set(s) if 20 <= users[uid].count < 30]),
-        ('30 to 49', [uid for uid in SimpleUserFolds.testing_set(s) if 20 <= users[uid].count < 50]),
-        ('50 to 99', [uid for uid in SimpleUserFolds.testing_set(s) if 50 <= users[uid].count < 100]),
-        ('100 to 999', [uid for uid in SimpleUserFolds.testing_set(s) if 100 <= users[uid].count < 1000])
+        ('20 to 29', [uid for uid in SimpleUserFolds.testing_set(s) if 20 <= workspace.users[uid].count < 30]),
+        ('30 to 49', [uid for uid in SimpleUserFolds.testing_set(s) if 20 <= workspace.users[uid].count < 50]),
+        ('50 to 99', [uid for uid in SimpleUserFolds.testing_set(s) if 50 <= workspace.users[uid].count < 100]),
+        ('100 to 999', [uid for uid in SimpleUserFolds.testing_set(s) if 100 <= workspace.users[uid].count < 1000])
     ]
     max_folds = 5
     metrics = (RMSEMetric, KendallTauMetric)
@@ -66,7 +67,7 @@ def main():
         for recommender in recommenders:
             perfs = []
             for k in xrange(max_folds):
-                perf = get_performance(users, movies, ratings, k, uid_subset, metrics, recommender)
+                perf = get_performance(workspace, k, uid_subset, metrics, recommender)
                 perfs.append(list(perf))
 
             print recommender.__name__

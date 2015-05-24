@@ -3,8 +3,8 @@ import numpy as np
 from sklearn import decomposition
 import os
 
-from lib.io import load_data
 from lib.folds import SimpleUserFolds
+from lib.workspace import load_data
 
 
 def save_components(cwd, A, split, movies_map):
@@ -55,11 +55,11 @@ def build_features_matrix(k, movies, ratings):
 
 def main():
     cwd = 'dat/ml-1m'
-    users, movies, ratings = load_data(cwd, None, False)
+    workspace = load_data(cwd)
     print "Loaded: Users, Movies, Ratings"
 
     for split in xrange(1, 2):
-        A, movies_map = build_features_matrix(split, movies, ratings)
+        A, movies_map = build_features_matrix(split, workspace.movies, workspace.ratings)
         pca = decomposition.RandomizedPCA(n_components=100)
         pca.fit(A)
         print pca.explained_variance_ratio_
