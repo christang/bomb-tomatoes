@@ -56,6 +56,7 @@ class TagBasedProfile(UserProfile):
         A = np.zeros(A_shape)
         b_shape = (len(m_index), 1)
         b = np.zeros(b_shape)
+
         for i, m_id in enumerate(m_index):
             for j, tag in enumerate(f_index):
                 # Take MovieLens tags at *mostly* face value :-)
@@ -68,6 +69,37 @@ class TagBasedProfile(UserProfile):
             # don't solve for now
             raise Exception('too many movies')
         return {f: x[i, 0] for i, f in enumerate(f_index)}
+
+
+class ComponentBasedProfile(UserProfile):
+
+    def __init__(self, user, movies, ratings):
+        super(ComponentBasedProfile, self).__init__(user, ratings)
+        self.f_coeffs = ComponentBasedProfile.build_coeffs(ratings, movies)
+
+    def predict(self, movie):
+        score = movie.components.dot(self.f_coeffs) + movie.amean
+        return round(score)
+
+    @staticmethod
+    def build_coeffs(ratings, movies):
+        m_index = sorted(ratings.keys())
+        n_comps = len(movies.movies[0].components)
+        A_shape = (len(m_index), n_comps)
+        A = np.zeros(A_shape)
+        b_shape = (len(m_index), 1)
+        b = np.zeros(b_shape)
+
+        for i, m_id in enumerate(m_index):
+            A[i, :] = movies[m_id].components
+            b[i, 0] = ratings[m_id] - movies[m_id].amean
+
+        if len(m_index) < 1000:
+            x = UserProfile.solve_least_squares(A, b)
+        else:
+            # don't solve for now
+            raise Exception('too many movies')
+        return x[:, 0]
 
 
 class BomTomRecommender(BaseRecommender):
@@ -91,4 +123,4 @@ class BomTomRecommender(BaseRecommender):
             users[r.u_id][r.m_id] = r.rating
 
         for u_id, ratings in users.items():
-            self.profiles[u_id] = TagBasedProfile(self.users[u_id], self.movies, ratings)
+            self.profiles[u_id] = ComponentBasedProfile(self.users[u_id], self.movies, ratings)
