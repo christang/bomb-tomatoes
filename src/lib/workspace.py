@@ -89,7 +89,9 @@ class Workspace(object):
         for m in self.movies.movies:
             if m.count > 0:
                 pickle_fn = os.path.join(self.cwd, 'components', '%02d' % self.k, str(m.ID))
-                self.movies[m.ID].components = Workspace.load_or_compute(pickle_fn, compute)
+                components = Workspace.load_or_compute(pickle_fn, compute)
+                self.movies[m.ID].components = np.ones(components.size + 1)
+                self.movies[m.ID].components[1:] = components  # components[0] === scale factor
 
     @staticmethod
     def load_or_compute(pickle_fn, compute):
