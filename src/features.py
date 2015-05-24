@@ -30,10 +30,13 @@ def load_or_compute(pickle_fn, compute):
 
 def build_features_matrix(k, movies, ratings):
     tags = sorted(movies.tags)
+    decades = sorted(movies.decades)
     rated_movies = {m_id: i for i, m_id in enumerate([m.ID for m in movies.movies if m.count > 0])}
     training_set_users = {u_id: i for i, u_id in enumerate(SimpleUserFolds.training_set(k))}
-    shape = (len(rated_movies), len(training_set_users) + len(tags))
+    shape = (len(rated_movies), len(training_set_users) + len(tags) + len(decades))
 
+    # We take zero to be the center of the distribution.
+    # when there is no data, the user is taken to have no preference liking or disliking the movie
     A = np.zeros(shape)
     for rating in ratings.ratings:
         if rating.u_id in training_set_users:
@@ -42,8 +45,13 @@ def build_features_matrix(k, movies, ratings):
 
     for m_id, i in rated_movies.items():
         for j, tag in enumerate(tags):
-            s = 1 if tag in movies[m_id].tags else 0.0001
+            s = 1 if tag in movies[m_id].tags else 0
             A[i, len(training_set_users) + j] = s
+
+    for m_id, i in rated_movies.items():
+        for j, decade in enumerate(decades):
+            s = 1 if decade == movies[m_id].decade() else 0
+            A[i, len(training_set_users) + len(tags) + j] = s
 
     return A, rated_movies
 
