@@ -16,10 +16,14 @@ class BaseRecommender(object):
     def name(self):
         return self.__class__.__name__
 
+    def predict(self, movie):
+        return BaseRecommender.default_score
+
     def rank_movies(self, uid, mid_subset=None):
         mid_subset = mid_subset or self.movies.movies_by_ID.keys()
-        for mid in mid_subset:
-            yield Rank(user=uid, movie=mid, rank=1, score=BaseRecommender.default_score)
+        ratings = [(mid, self.predict(self.movies[mid])) for mid in mid_subset]
+        for rank in BaseRecommender.sort_and_yield(ratings, uid):
+            yield rank
 
     def rank_users_movies(self, uid_subset=None, mid_subset=None):
         uid_subset = uid_subset or xrange(1, len(self.users.users) + 1)

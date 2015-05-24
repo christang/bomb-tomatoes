@@ -14,7 +14,7 @@ class UserProfile(object):
         self.f_coeffs = UserProfile.build_coeffs(ratings, movies)
         #print 'f_coeffs = ', self.f_coeffs
 
-    def rate(self, movie):
+    def predict(self, movie):
         score = movie.amean
         for tag, coeff in self.f_coeffs.items():
             a = 1 if tag in movie.tags else UserProfile.untagged
@@ -64,7 +64,7 @@ class BomTomRecommender(BaseRecommender):
 
     def rank_movies(self, uid, mid_subset=None):
         mid_subset = mid_subset or self.movies.movies_by_ID.keys()
-        ratings = [(mid, self.profiles[uid].rate(self.movies[mid])) for mid in mid_subset]
+        ratings = [(mid, self.profiles[uid].predict(self.movies[mid])) for mid in mid_subset]
         for rank in BaseRecommender.sort_and_yield(ratings, uid):
             yield rank
 
