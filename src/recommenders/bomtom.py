@@ -1,4 +1,5 @@
 from collections import defaultdict
+import math
 import numpy as np
 
 from base import BaseRecommender
@@ -75,23 +76,22 @@ class ComponentBasedProfile(UserProfile):
 
     def __init__(self, user, movies, ratings):
         super(ComponentBasedProfile, self).__init__(user, ratings)
-        self.f_coeffs = ComponentBasedProfile.build_coeffs(ratings, movies)
+        self.n_comps = 12
+        self.f_coeffs = self.build_coeffs(ratings, movies)
 
     def predict(self, movie):
-        score = movie.components.dot(self.f_coeffs) + movie.amean
+        score = movie.components[:self.n_comps].dot(self.f_coeffs) + movie.amean
         return min(5, max(1, round(score)))
 
-    @staticmethod
-    def build_coeffs(ratings, movies):
+    def build_coeffs(self, ratings, movies):
         m_index = sorted(ratings.keys())
-        n_comps = len(movies.movies[0].components)
-        A_shape = (len(m_index), n_comps)
+        A_shape = (len(m_index), self.n_comps)
         A = np.zeros(A_shape)
         b_shape = (len(m_index), 1)
         b = np.zeros(b_shape)
 
         for i, m_id in enumerate(m_index):
-            A[i, :] = movies[m_id].components
+            A[i, :] = movies[m_id].components[:self.n_comps]
             b[i, 0] = ratings[m_id] - movies[m_id].amean
 
         if len(m_index) < 1000:

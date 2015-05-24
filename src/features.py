@@ -11,12 +11,9 @@ def save_components(cwd, A, k, movies_map):
     def compute():
         return A[movies_map[m_id], :]
 
-    components = {}
     for m_id, i in movies_map.items():
         pickle_fn = os.path.join(cwd, 'components', '%02d' % k, str(m_id))
-        components[m_id] = load_or_compute(pickle_fn, compute)
-
-    return components
+        load_or_compute(pickle_fn, compute)
 
 
 def load_or_compute(pickle_fn, compute):
@@ -63,7 +60,7 @@ def main():
 
     for k in xrange(1, 2):
         A, movies_map = build_features_matrix(k, movies, ratings)
-        pca = decomposition.RandomizedPCA(n_components=10)
+        pca = decomposition.RandomizedPCA(n_components=100)
         pca.fit(A)
         print pca.explained_variance_ratio_
         print "Ratio of explained variances: %f" % (sum(pca.explained_variance_ratio_))
