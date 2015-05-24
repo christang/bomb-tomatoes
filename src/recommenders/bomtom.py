@@ -6,18 +6,45 @@ from base import BaseRecommender
 
 class UserProfile(object):
 
-    untagged = 0.001
+    tolerance = 0.001
 
-    def __init__(self, user, movies, ratings):
+    def __init__(self, user, ratings):
         self.user = user
         self.ratings = ratings
-        self.f_coeffs = UserProfile.build_coeffs(ratings, movies)
-        #print 'f_coeffs = ', self.f_coeffs
+
+    def predict(self, movie):
+        return 0
+
+    @staticmethod
+    def solve_normal_equations(A, b):
+        """
+        We seek to minimize: L2||Ax-b||
+         => (A'A)^-1 dot A' dot b
+         => pinv(A) dot b
+
+        :param A: matrix of movie features having shape (# movies, # features)
+        :param b: vector of user's ratings preferences
+        :return: vector of coefficients minimizing L2 ||Ax-b||
+        """
+        x = np.linalg.pinv(A).dot(b)
+        return x
+
+    @staticmethod
+    def solve_least_squares(A, b):
+        x, resid, rank, s = np.linalg.lstsq(A, b, rcond=UserProfile.tolerance)
+        return x
+
+
+class TagBasedProfile(UserProfile):
+
+    def __init__(self, user, movies, ratings):
+        super(TagBasedProfile, self).__init__(user, ratings)
+        self.f_coeffs = TagBasedProfile.build_coeffs(ratings, movies)
 
     def predict(self, movie):
         score = movie.amean
         for tag, coeff in self.f_coeffs.items():
-            a = 1 if tag in movie.tags else UserProfile.untagged
+            a = 1 if tag in movie.tags else UserProfile.tolerance
             score += a * coeff
         return round(score)
 
@@ -32,7 +59,7 @@ class UserProfile(object):
         for i, m_id in enumerate(m_index):
             for j, tag in enumerate(f_index):
                 # Take MovieLens tags at *mostly* face value :-)
-                A[i, j] = 1 if tag in movies[m_id].tags else UserProfile.untagged
+                A[i, j] = 1 if tag in movies[m_id].tags else UserProfile.tolerance
             b[i, 0] = ratings[m_id] - movies[m_id].amean
 
         if len(m_index) < 1000:
@@ -41,19 +68,6 @@ class UserProfile(object):
             # don't solve for now
             raise Exception('too many movies')
         return {f: x[i, 0] for i, f in enumerate(f_index)}
-
-    @staticmethod
-    def solve_normal_equations(A, b):
-        # We seek to minimize: L2||Ax-b||
-        # => (A'A)^-1 dot A' dot b
-        # => pinv(A) dot b
-        x = np.linalg.pinv(A).dot(b)
-        return x
-
-    @staticmethod
-    def solve_least_squares(A, b):
-        x, resid, rank, s = np.linalg.lstsq(A, b, rcond=UserProfile.untagged)
-        return x
 
 
 class BomTomRecommender(BaseRecommender):
@@ -77,4 +91,4 @@ class BomTomRecommender(BaseRecommender):
             users[r.u_id][r.m_id] = r.rating
 
         for u_id, ratings in users.items():
-            self.profiles[u_id] = UserProfile(self.users[u_id], self.movies, ratings)
+            self.profiles[u_id] = TagBasedProfile(self.users[u_id], self.movies, ratings)
