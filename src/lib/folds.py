@@ -1,3 +1,4 @@
+import itertools
 import random
 
 from sklearn import cross_validation
@@ -29,6 +30,19 @@ class Folds(object):
             rids.extend(user_rids)
         random.shuffle(rids)
         return rids
+
+
+class SimpleUserFolds(object):
+
+    @staticmethod
+    def training_set(k):
+        assert 1 <= k <= 12
+        return itertools.chain(xrange(1, 1 + 500*(k-1)), xrange(1 + 500*k, 6001))
+
+    @staticmethod
+    def testing_set(k):
+        assert 1 <= k <= 12
+        return xrange(1 + 500*(k-1), 1 + 500*k)
 
 
 def expand(kf):

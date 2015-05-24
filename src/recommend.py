@@ -1,17 +1,13 @@
 import logging
-import os
 
-from folds import Folds
+from lib.folds import Folds
+from lib.io import load_data
 from metrics.rmse import RMSEMetric
 from metrics.kendall_tau import KendallTauMetric
-from models.movies import Movies
-from models.ratings import Ratings
-from models.users import Users
 from recommenders.base import Rank
 from recommenders.bomtom import BomTomRecommender
 from recommenders.perfect import PerfectRecommender
 from recommenders.trivial import TrivialArithMeanRecommender, TrivialHarmMeanRecommender
-from workspace import Workspace
 
 
 logging.basicConfig(filename='detail.log', filemode='w', level=logging.INFO)
@@ -48,17 +44,6 @@ def get_performance(users, movies, ratings, k, uid_subset, metrics, Recommender)
         guess[uid] = get_guess(recommender, truth, uid)
 
     return (m(truth, guess, recommender.name(), k+1) for m in metrics)
-
-
-def load_data(data_dir):
-    users = Users.parse_stream(open(os.path.join(data_dir, 'users.dat')))
-    movies = Movies.parse_stream(open(os.path.join(data_dir, 'movies.dat')))
-    ratings = Ratings.parse_stream(open(os.path.join(data_dir, 'ratings.dat')))
-
-    w = Workspace(movies, ratings, users)
-    w.summarize_users()
-    w.summarize_movies()
-    return users, movies, ratings
 
 
 def main():

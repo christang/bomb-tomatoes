@@ -6,8 +6,9 @@ import scipy.stats as spstats
 
 class Workspace(object):
 
-    def __init__(self, movies, ratings, users, cwd='dat/pkl'):
+    def __init__(self, movies, ratings, users, k=1, cwd='dat/pkl'):
         self.cwd = cwd
+        self.k = k
 
         self.movies = movies
         self.ratings = ratings
@@ -80,6 +81,17 @@ class Workspace(object):
         for o in self.users.occupations:
             pickle_fn = os.path.join(self.cwd, 'occupations', str(o))
             self.occupations[o] = Workspace.load_or_compute(pickle_fn, compute)
+
+    def extract_components(self):
+        def compute():
+            raise Exception('run features.py to extract components')
+
+        for m in self.movies.movies:
+            if m.count > 0:
+                pickle_fn = os.path.join(self.cwd, 'components', '%02d' % self.k, str(m.ID))
+                components = Workspace.load_or_compute(pickle_fn, compute)
+                self.movies[m.ID].components = np.ones(components.size + 1)
+                self.movies[m.ID].components[1:] = components  # components[0] === scale factor
 
     @staticmethod
     def load_or_compute(pickle_fn, compute):
