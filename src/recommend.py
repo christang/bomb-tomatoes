@@ -54,7 +54,7 @@ def main():
 
     uid_subsets = [
         ('20 to 29', [uid for uid in SimpleUserFolds.testing_set(s) if 20 <= workspace.users[uid].count < 30]),
-        ('30 to 49', [uid for uid in SimpleUserFolds.testing_set(s) if 20 <= workspace.users[uid].count < 50]),
+        ('30 to 49', [uid for uid in SimpleUserFolds.testing_set(s) if 30 <= workspace.users[uid].count < 50]),
         ('50 to 99', [uid for uid in SimpleUserFolds.testing_set(s) if 50 <= workspace.users[uid].count < 100]),
         ('100 to 999', [uid for uid in SimpleUserFolds.testing_set(s) if 100 <= workspace.users[uid].count < 1000])
     ]
