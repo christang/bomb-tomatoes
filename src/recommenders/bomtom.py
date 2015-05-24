@@ -19,7 +19,7 @@ class UserProfile(object):
         for tag, coeff in self.f_coeffs.items():
             a = 1 if tag in movie.tags else UserProfile.untagged
             score += a * coeff
-        return score
+        return round(score)
 
     @staticmethod
     def build_coeffs(ratings, movies):
