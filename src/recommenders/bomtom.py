@@ -76,7 +76,7 @@ class ComponentBasedProfile(UserProfile):
 
     def __init__(self, user, movies, ratings):
         super(ComponentBasedProfile, self).__init__(user, ratings)
-        self.n_comps = 12
+        self.n_comps = 1 + min(20, len(ratings) // 5)
         self.f_coeffs = self.build_coeffs(ratings, movies)
 
     def predict(self, movie):
