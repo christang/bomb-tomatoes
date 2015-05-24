@@ -58,8 +58,7 @@ def main():
     ]
     max_folds = 5
     metrics = (RMSEMetric, KendallTauMetric)
-    recommenders = (PerfectRecommender, TrivialArithMeanRecommender, TrivialHarmMeanRecommender,
-                    BomTomRecommender)
+    recommenders = (PerfectRecommender, TrivialArithMeanRecommender, BomTomRecommender)
 
     for label, uid_subset in uid_subsets:
         print 'users.count w/ %s ratings : %d' % (label, len(uid_subset))
