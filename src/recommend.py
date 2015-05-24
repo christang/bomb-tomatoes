@@ -48,7 +48,7 @@ def get_performance(users, movies, ratings, k, uid_subset, metrics, Recommender)
 
 def main():
     cwd = 'dat/ml-1m'
-    users, movies, ratings = load_data(cwd)
+    users, movies, ratings = load_data(cwd, split=1)
 
     uid_subsets = [
         ('20 to 29', [uid for uid in xrange(1, 501) if 20 <= users[uid].count < 30]),

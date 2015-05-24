@@ -7,12 +7,12 @@ from lib.io import load_data
 from lib.folds import SimpleUserFolds
 
 
-def save_components(cwd, A, k, movies_map):
+def save_components(cwd, A, split, movies_map):
     def compute():
         return A[movies_map[m_id], :]
 
     for m_id, i in movies_map.items():
-        pickle_fn = os.path.join(cwd, 'components', '%02d' % k, str(m_id))
+        pickle_fn = os.path.join(cwd, 'components', '%02d' % split, str(m_id))
         load_or_compute(pickle_fn, compute)
 
 
@@ -55,16 +55,16 @@ def build_features_matrix(k, movies, ratings):
 
 def main():
     cwd = 'dat/ml-1m'
-    users, movies, ratings = load_data(cwd, False)
+    users, movies, ratings = load_data(cwd, None, False)
     print "Loaded: Users, Movies, Ratings"
 
-    for k in xrange(1, 2):
-        A, movies_map = build_features_matrix(k, movies, ratings)
+    for split in xrange(1, 2):
+        A, movies_map = build_features_matrix(split, movies, ratings)
         pca = decomposition.RandomizedPCA(n_components=100)
         pca.fit(A)
         print pca.explained_variance_ratio_
         print "Ratio of explained variances: %f" % (sum(pca.explained_variance_ratio_))
-        save_components('dat/pkl', pca.transform(A), k, movies_map)
+        save_components('dat/pkl', pca.transform(A), split, movies_map)
 
 if __name__ == '__main__':
     main()
