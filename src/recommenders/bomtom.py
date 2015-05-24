@@ -46,7 +46,7 @@ class TagBasedProfile(UserProfile):
         for tag, coeff in self.f_coeffs.items():
             a = 1 if tag in movie.tags else UserProfile.tolerance
             score += a * coeff
-        return round(score)
+        return min(5, max(1, round(score)))
 
     @staticmethod
     def build_coeffs(ratings, movies):
@@ -79,7 +79,7 @@ class ComponentBasedProfile(UserProfile):
 
     def predict(self, movie):
         score = movie.components.dot(self.f_coeffs) + movie.amean
-        return round(score)
+        return min(5, max(1, round(score)))
 
     @staticmethod
     def build_coeffs(ratings, movies):
