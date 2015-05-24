@@ -41,6 +41,8 @@ class Movie(object):
         self.hmean = None
         self.var = None
 
+        self.components = None
+
     def summarize(self, r_ids, count, amean, hmean, var):
         self.r_ids = r_ids
         self.count = count
