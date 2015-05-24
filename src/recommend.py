@@ -1,6 +1,6 @@
 import logging
 
-from lib.folds import Folds
+from lib.folds import Folds, SimpleUserFolds
 from lib.io import load_data
 from metrics.rmse import RMSEMetric
 from metrics.kendall_tau import KendallTauMetric
@@ -47,14 +47,15 @@ def get_performance(users, movies, ratings, k, uid_subset, metrics, Recommender)
 
 
 def main():
+    s = 1
     cwd = 'dat/ml-1m'
-    users, movies, ratings = load_data(cwd, split=1)
+    users, movies, ratings = load_data(cwd, split=s)
 
     uid_subsets = [
-        ('20 to 29', [uid for uid in xrange(1, 501) if 20 <= users[uid].count < 30]),
-        ('30 to 49', [uid for uid in xrange(1, 501) if 20 <= users[uid].count < 50]),
-        ('50 to 99', [uid for uid in xrange(1, 501) if 50 <= users[uid].count < 100]),
-        ('100 to 999', [uid for uid in xrange(1, 501) if 100 <= users[uid].count < 1000])
+        ('20 to 29', [uid for uid in SimpleUserFolds.testing_set(s) if 20 <= users[uid].count < 30]),
+        ('30 to 49', [uid for uid in SimpleUserFolds.testing_set(s) if 20 <= users[uid].count < 50]),
+        ('50 to 99', [uid for uid in SimpleUserFolds.testing_set(s) if 50 <= users[uid].count < 100]),
+        ('100 to 999', [uid for uid in SimpleUserFolds.testing_set(s) if 100 <= users[uid].count < 1000])
     ]
     max_folds = 5
     metrics = (RMSEMetric, KendallTauMetric)
