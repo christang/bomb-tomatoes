@@ -3,7 +3,8 @@ from scipy import sparse
 from sklearn import feature_selection
 
 from lib.folds import SimpleUserFolds
-from lib.workspace import load_data
+from lib.workspace import load_data, Workspace
+from models.ratings import Ratings
 
 
 def build_features_matrix(k, users, movies, ratings):
@@ -25,7 +26,26 @@ def build_features_matrix(k, users, movies, ratings):
         b2[i] = users[u_id].age_group
         b3[i] = users[u_id].occupation
 
-    return A, b1, b2, b3, rated_movies
+    return A, b1, b2, b3, training_set_users, rated_movies
+
+
+def recover_gender_gap(u_ids, m_ids, workspace):
+    biases = []
+    for m_id in m_ids:
+        ratings = Ratings(workspace.ratings.for_subset(u_ids, [m_id]))
+        biases.append({
+            'f': Workspace.summary_stats(ratings.for_gender(False, workspace.users)),
+            'm': Workspace.summary_stats(ratings.for_gender(True, workspace.users))
+        })
+    return biases
+
+
+def recover_generation_gap(u_ids, m_ids, workspace):
+    return []
+
+
+def recover_occupation_gap(u_ids, m_ids, workspace):
+    return []
 
 
 def main():
@@ -35,17 +55,24 @@ def main():
 
     split = 1
 
-    A, b1, b2, b3, movies_map = build_features_matrix(split, workspace.users, workspace.movies, workspace.ratings)
+    A, b1, b2, b3, users_map, movies_map = \
+        build_features_matrix(split, workspace.users, workspace.movies, workspace.ratings)
     chi2 = feature_selection.SelectKBest(feature_selection.chi2)
     inv_movies_map = {i: m_id for m_id, i in movies_map.items()}
 
-    for b, label in zip((b1, b2, b3), ('gender', 'age group', 'occupation')):
-        print '\nby %s' % label
-        chi2.fit(A, b)
-        selected = [(chi2.pvalues_[i], workspace.movies[inv_movies_map[i]])
-                    for i in chi2.get_support(True)]
-        selected.sort(key=lambda s: s[0])
-        print '\n'.join([str(s) for s in selected])
+    print '\nby gender'
+    chi2.fit(A, b1)
+    supports = chi2.get_support(True)
+    selected = [(chi2.pvalues_[i], workspace.movies[inv_movies_map[i]]) for i in supports]
+    selected.sort(key=lambda s: s[0])
+    stats = recover_gender_gap(users_map.keys(), [m.ID for _, m in selected], workspace)
+    for s1, s2 in zip(selected, stats):
+        n = s2['m'][1] + s2['f'][1]
+        r = float(s2['m'][1]) / float(s2['f'][1])
+        l = 'male-to-female' if r >= 1 else 'female-to-male'
+        r = 1.0 / r if r < 1 else r
+        print 'n=%4s mean(M)=%4.2f mean(F)=%4.2f %s=%4.2f %s' % \
+              (n, s2['m'][2], s2['f'][2], l, r, s1[1])
 
 if __name__ == '__main__':
     main()
