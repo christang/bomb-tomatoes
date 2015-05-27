@@ -1,25 +1,36 @@
+Ages = {
+    1:  "Under 18",
+    18:  "18-24",
+    25:  "25-34",
+    35:  "35-44",
+    45:  "45-49",
+    50:  "50-55",
+    56:  "56+"
+}
+
+
 Occupations = [
-    "other",
-    "academic/educator",
-    "artist",
-    "clerical/admin",
-    "college/grad student",
-    "customer service",
-    "doctor/health care",
-    "executive/managerial",
-    "farmer",
-    "homemaker",
-    "K-12 student",
-    "lawyer",
-    "programmer",
-    "retired",
-    "sales/marketing",
-    "scientist",
-    "self-employed",
-    "technician/engineer",
-    "tradesman/craftsman",
-    "unemployed",
-    "writer"
+    "other",                 # 0
+    "academic/educator",     # 1
+    "artist",                # 2
+    "clerical/admin",        # 3
+    "college/grad student",  # 4
+    "customer service",      # 5
+    "doctor/health care",    # 6
+    "executive/managerial",  # 7
+    "farmer",                # 8
+    "homemaker",             # 9
+    "K-12 student",          # 10
+    "lawyer",                # 11
+    "programmer",            # 12
+    "retired",               # 13
+    "sales/marketing",       # 14
+    "scientist",             # 15
+    "self-employed",         # 16
+    "technician/engineer",   # 17
+    "tradesman/craftsman",   # 18
+    "unemployed",            # 19
+    "writer"                 # 20
 ]
 
 
