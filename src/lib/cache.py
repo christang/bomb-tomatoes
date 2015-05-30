@@ -16,7 +16,7 @@ class Pickled(object):
         self.cwd = cwd
 
     @staticmethod
-    def load_or_compute(pickle_fn, compute, retry=0, retry_none=True):
+    def load_or_compute(pickle_fn, compute, retry=0, retry_none=False):
         result = cPickle.load(open(pickle_fn)) if os.path.isfile(pickle_fn) else None
 
         if result is None and retry_none:

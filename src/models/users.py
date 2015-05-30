@@ -1,3 +1,6 @@
+from zip_code import ZipCode
+
+
 Ages = {
     1:  "Under 18",
     18:  "18-24",
@@ -43,6 +46,7 @@ class Users(object):
         self.genders = {True, False}
         self.occupations = {u.occupation for u in self.users}
         self.age_groups = {u.age_group for u in self.users}
+        self.zip_codes = {u.zip_code for u in self.users}
 
     def __getitem__(self, item):
         try:
@@ -62,12 +66,12 @@ class Users(object):
 
 class User(object):
 
-    def __init__(self, id_, is_male, age_group, occupation, zip_code):
+    def __init__(self, id_, is_male, age_group, occupation, zip_code, detailed_geo=True):
         self.ID = id_
         self.is_male = is_male
         self.age_group = age_group
         self.occupation = occupation
-        self.zip_code = zip_code
+        self.zip_code = ZipCode(zip_code) if detailed_geo else zip_code
 
         self.r_ids = None
         self.count = None

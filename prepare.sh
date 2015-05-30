@@ -1,4 +1,4 @@
-for dir in movies users tags decades age_groups genders occupations
+for dir in movies users tags decades age_groups genders occupations zip_codes
   do
     mkdir -p dat/pkl/$dir
   done
