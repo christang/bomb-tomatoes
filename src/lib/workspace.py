@@ -1,17 +1,17 @@
-import cPickle
 import numpy as np
 import os
 import scipy.stats as spstats
 
+from lib.cache import Pickled
 from models.movies import Movies
 from models.ratings import Ratings
 from models.users import Users
 
 
-class Workspace(object):
+class Workspace(Pickled):
 
-    def __init__(self, movies, ratings, users, cwd='dat/pkl'):
-        self.cwd = cwd
+    def __init__(self, movies, ratings, users):
+        super(Workspace, self).__init__()
 
         self.movies = movies
         self.ratings = ratings
@@ -29,7 +29,7 @@ class Workspace(object):
 
         for m in self.movies.movies:
             pickle_fn = os.path.join(self.cwd, 'movies', str(m.ID))
-            self.movies[m.ID].summarize(*Workspace.load_or_compute(pickle_fn, compute))
+            self.movies[m.ID].summarize(*Pickled.load_or_compute(pickle_fn, compute))
 
     def summarize_users(self):
         def compute():
@@ -38,7 +38,7 @@ class Workspace(object):
 
         for u in self.users.users:
             pickle_fn = os.path.join(self.cwd, 'users', str(u.ID))
-            self.users[u.ID].summarize(*Workspace.load_or_compute(pickle_fn, compute))
+            self.users[u.ID].summarize(*Pickled.load_or_compute(pickle_fn, compute))
 
     def summarize_tags(self):
         def compute():
@@ -47,7 +47,7 @@ class Workspace(object):
 
         for t in self.movies.tags:
             pickle_fn = os.path.join(self.cwd, 'tags', str(t))
-            self.tags[t] = Workspace.load_or_compute(pickle_fn, compute)
+            self.tags[t] = Pickled.load_or_compute(pickle_fn, compute)
 
     def summarize_decades(self):
         def compute():
@@ -56,7 +56,7 @@ class Workspace(object):
 
         for d in self.movies.decades:
             pickle_fn = os.path.join(self.cwd, 'decades', str(d))
-            self.decades[d] = Workspace.load_or_compute(pickle_fn, compute)
+            self.decades[d] = Pickled.load_or_compute(pickle_fn, compute)
 
     def summarize_age_groups(self):
         def compute():
@@ -65,7 +65,7 @@ class Workspace(object):
 
         for a in self.users.age_groups:
             pickle_fn = os.path.join(self.cwd, 'age_groups', str(a))
-            self.age_groups[a] = Workspace.load_or_compute(pickle_fn, compute)
+            self.age_groups[a] = Pickled.load_or_compute(pickle_fn, compute)
 
     def summarize_genders(self):
         def compute():
@@ -74,7 +74,7 @@ class Workspace(object):
 
         for g in self.users.genders:
             pickle_fn = os.path.join(self.cwd, 'genders', str(g))
-            self.genders[g] = Workspace.load_or_compute(pickle_fn, compute)
+            self.genders[g] = Pickled.load_or_compute(pickle_fn, compute)
 
     def summarize_occupations(self):
         def compute():
@@ -83,7 +83,7 @@ class Workspace(object):
 
         for o in self.users.occupations:
             pickle_fn = os.path.join(self.cwd, 'occupations', str(o))
-            self.occupations[o] = Workspace.load_or_compute(pickle_fn, compute)
+            self.occupations[o] = Pickled.load_or_compute(pickle_fn, compute)
 
     def extract_components(self, split):
         def compute():
@@ -92,18 +92,9 @@ class Workspace(object):
         for m in self.movies.movies:
             if m.count > 0:
                 pickle_fn = os.path.join(self.cwd, 'components', '%02d' % split, str(m.ID))
-                components = Workspace.load_or_compute(pickle_fn, compute)
+                components = Pickled.load_or_compute(pickle_fn, compute)
                 self.movies[m.ID].components = np.ones(components.size + 1)
                 self.movies[m.ID].components[1:] = components  # components[0] === scale factor
-
-    @staticmethod
-    def load_or_compute(pickle_fn, compute):
-        if os.path.isfile(pickle_fn):
-            result = cPickle.load(open(pickle_fn))
-        else:
-            result = compute()
-            cPickle.dump(result, open(pickle_fn, 'wb'))
-        return result
 
     @staticmethod
     def summary_stats(movie_ratings):
