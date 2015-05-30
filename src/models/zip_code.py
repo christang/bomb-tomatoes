@@ -9,9 +9,8 @@ class ZipCode(Pickled):
     def __init__(self, zip_code):
         super(ZipCode, self).__init__()
 
-        self.zip_code = zip_code
-        self.metadata = self.fetch_metadata()
-        print self
+        self.zip_code = zip_code.split('-')[0]
+        self.metadata = self.fetch_metadata() if len(self.zip_code) == 5 else None
 
     def __repr__(self):
         if self.metadata:
@@ -23,7 +22,6 @@ class ZipCode(Pickled):
         def compute():
             response = requests.get(ZipCode.maps_resource(self.zip_code)).json()
             status = response.get('status')
-            print self.zip_code, response
             if status == 'OK':
                 return response.get('results')[0]
             elif status == 'ZERO_RESULTS':
@@ -35,5 +33,8 @@ class ZipCode(Pickled):
         return Pickled.load_or_compute(pickle_fn, compute, retry=1)
 
     @staticmethod
-    def maps_resource(zip_code):
-        return 'http://maps.googleapis.com/maps/api/geocode/json?address=%s' % zip_code
+    def maps_resource(zip_code, key=None):
+        resource = 'https://maps.googleapis.com/maps/api/geocode/json?address=%s' % zip_code
+        if key:
+            resource += '&key=%s' % key
+        return resource
